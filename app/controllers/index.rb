@@ -8,9 +8,16 @@ get '/posts' do
 end
 
 post '/posts/:id/vote' do
+  p params
+  p request
   post = Post.find(params[:id])
   post.votes.create(value: 1)
-  redirect "/posts"
+
+  if request.xhr? # if it's ajax
+    post.votes.count.to_s #what we're sending back
+  else
+    redirect "/posts"
+  end
 end
 
 delete '/posts/:id' do
