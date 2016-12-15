@@ -39,14 +39,18 @@ $(document).ready(function() {
     var element = event.target;
     var url = $(element).attr('action');
     var cloned_post = $(element).siblings('.post-container').children('article').first()
-
+    var title = $(this).serialize();
+    this.reset();
+    console.log(title);
+    console.log(title.title);
     $.ajax({
       url: url,
-      method: 'POST'
+      method: 'POST',
+      data: title
     }).done(function(response) {
       console.log(response);
       $('.post-container').append(cloned_post);
-      $('article').last().find('a').first().text(response.title); //not working yet
+      $('article').last().find('a').first().text(title); //works but puts title= first
 
     }).fail(function(){
       console.log("Post failed");
