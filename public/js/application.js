@@ -1,20 +1,55 @@
 $(document).ready(function() {
   //click is a button event, submit is a form event
   $('.vote-button').on('click', function(e){
-    console.log('clicked');
     e.preventDefault();
-    var element = this; //only a dom obj, need $ to make it js obj
+    var element = e.target; //only a dom obj, need $ to make it js obj
 
-    var url = $(this).parent().attr('action');
+    var url = $(e.target).parent().attr('action');
     $.ajax({
       url: url,
       method: 'POST', //can also use delete and put here
       data: {message: 'here\s a message'}
     }).done(function(res) {
-      console.log(res);
-      var x = $(element).parent().parent().children('p').first().children('.points').html(res);
-    }).error(
-      console.log('oh no!')
-    )
-  }) //onclick
+      //console.log(res);    prints num
+      $(element).closest('article').find('.points').html(res);//whats actually being shown
+      $(element).css('color', 'red');
+    }).fail(function(){
+      console.log('oh no!');
+    });
+  }); //onclick
+
+  $('.delete').on('click', function(event) {
+    event.preventDefault();
+    var element = event.target;
+    var url = $(element).attr('href');
+
+    $.ajax({
+      url: url,
+      method: 'DELETE',
+      data: {message: "Deleted"}
+    }).done(function() {
+      $(element).closest('article').remove();
+    }).fail(function(){
+      console.log("Delete failed.");
+    });
+  });
+
+  $('#posts').on('submit', function(event) {
+    event.preventDefault();
+    var element = event.target;
+    var url = $(element).attr('action');
+    var cloned_post = $(element).siblings('.post-container').children('article').first()
+
+    $.ajax({
+      url: url,
+      method: 'POST'
+    }).done(function() {
+      $('.post-container').append(cloned_post);
+    }).fail(function(){
+      console.log("Post failed");
+    })
+
+  })
+// $('article').last().append(cloned_post);
+
 }); //ready
