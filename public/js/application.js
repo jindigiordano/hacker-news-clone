@@ -43,8 +43,11 @@ $(document).ready(function() {
     $.ajax({
       url: url,
       method: 'POST'
-    }).done(function() {
+    }).done(function(response) {
+      console.log(response);
       $('.post-container').append(cloned_post);
+      $('article').last().find('a').first().text(response.title); //not working yet
+
     }).fail(function(){
       console.log("Post failed");
     })

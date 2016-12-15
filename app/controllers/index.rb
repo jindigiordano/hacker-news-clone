@@ -24,11 +24,12 @@ delete '/posts/:id' do
 end
 
 post '/posts' do
-  p params
+
   if request.xhr?
     Post.create( title: params[:title],
                  username: Faker::Internet.user_name,
                  comment_count: rand(1000) ).to_json
+    p params
   else
     redirect '/posts'
   end
