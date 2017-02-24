@@ -10,18 +10,29 @@ end
 post '/posts/:id/vote' do
   post = Post.find(params[:id])
   post.votes.create(value: 1)
-  redirect "/posts"
+
+  if request.xhr? # if it's ajax
+    post.votes.count.to_json #what we're sending back
+  else
+    redirect "/posts"
+  end
 end
 
 delete '/posts/:id' do
   # write logic for deleting posts here.
+  Post.find(params[:id]).destroy;
 end
 
 post '/posts' do
-  Post.create( title: params[:title],
-               username: Faker::Internet.user_name,
-               comment_count: rand(1000) )
-  redirect '/posts'
+
+  if request.xhr?
+    @post = Post.create( title: params[:title],
+                 username: Faker::Internet.user_name,
+                 comment_count: rand(1000) )
+    @post.save!
+  else
+    redirect '/posts'
+  end
 end
 
 get '/post/:id' do
